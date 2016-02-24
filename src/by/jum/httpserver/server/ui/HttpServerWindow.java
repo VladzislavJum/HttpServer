@@ -1,5 +1,6 @@
-package by.jum.httpserver.server;
+package by.jum.httpserver.server.ui;
 
+import by.jum.httpserver.server.ServerRunner;
 import by.jum.httpserver.utils.constants.Constants;
 import org.apache.log4j.Logger;
 

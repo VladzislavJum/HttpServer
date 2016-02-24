@@ -1,11 +1,11 @@
 package by.jum.httpserver.server.processing;
 
 import by.jum.httpserver.utils.constants.Constants;
+import by.jum.httpserver.utils.constants.Path;
 import org.apache.log4j.Logger;
 
 import javax.swing.JTextArea;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +19,7 @@ public class Connection extends Thread {
     private InputStream inputStream;
     private RequestHandler requestHandler;
     private JTextArea logArea;
+    private ResponseHandler responseHandler;
 
     public Connection(Socket socket, JTextArea logArea) throws IOException {
         this.logArea = logArea;
@@ -27,6 +28,7 @@ public class Connection extends Thread {
         requestHandler = new RequestHandler();
         outputStream = socket.getOutputStream();
         inputStream = socket.getInputStream();
+        responseHandler = new ResponseHandler(outputStream);
         outputStream.flush();
     }
 
@@ -42,15 +44,18 @@ public class Connection extends Thread {
                     allRequest.append(request + "\n");
                 }
             }
-            LOGGER.info(requestHandler.getUrl(allRequest.toString()));
+            System.out.print(allRequest);
+
+            LOGGER.info(requestHandler.getMethod(allRequest.toString()));
             logArea.append(Constants.SEPARATOR.getName() + allRequest);
-            LOGGER.info(getMethod(allRequest.toString()));
 
-            getContext("gf");
+            String response = responseHandler.getResponse(
+                    Path.PAGES_PATH.getPath() + requestHandler.getUrl(allRequest.toString()) + ".html");
 
-
+            outputStream.write(response.getBytes());
+            logArea.append(Constants.SEPARATOR.getName() + response + "\n");
         } catch (IOException e) {
-            logArea.append("\n Client disconnected");
+            logArea.append("\n Request or Response Error");
         } finally {
             try {
                 if (socket != null) {
@@ -60,36 +65,13 @@ public class Connection extends Thread {
                 if (outputStream != null) {
                     outputStream.close();
                 }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
     }
 
-
-    private String getMethod(String request) {
-        String method = "";
-        char symbol;
-        for (int i = 0; i < request.length(); i++) {
-            symbol = request.charAt(i);
-            if (symbol == ' ') {
-                return method;
-            } else {
-                method += symbol;
-            }
-        }
-        return method;
-    }
-
-    private String getContext(String url) throws IOException {
-        StringBuilder context = new StringBuilder();
-
-        FileReader reader = new FileReader("resource/htmls/page1.html");
-
-        while (reader.ready()){
-//            context.append(reader.read());
-            outputStream.write(reader.read());
-        }
-        return context.toString();
-    }
 }
