@@ -30,9 +30,9 @@ public class HttpServerWindow {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        JButton stopServer = new JButton(Constants.STOP.getName());
-        JButton runServer = new JButton(Constants.START.getName());
-        JButton clearLOG = new JButton(Constants.CLEAR.getName());
+        JButton stopServer = new JButton(Constants.STOP.getConstant());
+        JButton runServer = new JButton(Constants.START.getConstant());
+        JButton clearLOG = new JButton(Constants.CLEAR.getConstant());
 
         JPanel serverPanel = new JPanel();
         serverPanel.setLayout(new FlowLayout());
