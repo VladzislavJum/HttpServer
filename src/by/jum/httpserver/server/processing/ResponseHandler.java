@@ -29,23 +29,17 @@ public class ResponseHandler {
     public String getResponse(String filePath, String request) {
         addBody(filePath);
         String method = requestHandler.getMethod(request);
-
-        String responseHeader = "HTTP/1.1 " + status + "\r\n" +
-                "Server: Http Server\r\n" +
-                "Content-Type: text/html\r\n" +
-                "Content-Length: " + response.length() + "\r\n" +
-                "Connection: keep-alive\r\n\r\n";
-
         if (method.equals(Constants.METHOD_POST.getConstant())) {
             Collection<String> valuesList = requestHandler.getParams(request).values();
+            LOGGER.info("Params: " + requestHandler.getParams(request));
             StringBuilder values = new StringBuilder();
-            valuesList.forEach(s -> values.append(s + " "));
+            valuesList.forEach(s -> values.append(s + "<br/>"));
             response.insert(response.indexOf("<body>") + 6, values);
         } else if (method.equals(Constants.METHOD_HEAD.getConstant())) {
-            return responseHeader;
+            return getHeader();
         }
 
-        return responseHeader + response;
+        return getHeader() + response;
     }
 
     private void readFile(String filePath) throws IOException {
@@ -75,5 +69,15 @@ public class ResponseHandler {
         LOGGER.info("Status " + status);
     }
 
+
+    private String getHeader(){
+        String responseHeader = "HTTP/1.1 " + status + "\r\n" +
+                "Server: Http Server\r\n" +
+                "Content-Type: text/html\r\n" +
+                "Content-Length: " + response.length() + "\r\n" +
+                "Connection: keep-alive\r\n\r\n";
+
+        return responseHeader;
+    }
 
 }

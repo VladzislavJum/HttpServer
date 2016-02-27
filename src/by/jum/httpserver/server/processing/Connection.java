@@ -45,8 +45,6 @@ public class Connection extends Thread {
                             body.append((char) inputReader.read());
                         }
                         allRequest.append(body + "\n");
-                        LOGGER.info(body);
-                        requestHandler.getParams(allRequest.toString());
                     }
                     break;
                 } else {

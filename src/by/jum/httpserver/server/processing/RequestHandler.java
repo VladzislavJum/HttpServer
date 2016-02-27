@@ -44,12 +44,17 @@ public class RequestHandler implements IRequestHandler {
         }
         String[] allSubstring = request.split("\n");
         String lastString = allSubstring[allSubstring.length - 1];
-            String[] allParams = lastString.split("&");
-            String[] keyValue;
-            for (String param : allParams) {
-                keyValue = param.split("=");
+
+        String[] allParams = lastString.split("&");
+        String[] keyValue;
+        for (String param : allParams) {
+            keyValue = param.split("=");
+            if (keyValue.length == 1) {
+                params.put(keyValue[0], "");
+            } else {
                 params.put(keyValue[0], keyValue[1]);
             }
+        }
         return params;
     }
 }
