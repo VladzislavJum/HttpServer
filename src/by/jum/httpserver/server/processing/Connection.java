@@ -27,7 +27,6 @@ public class Connection extends Thread {
         requestHandler = new RequestHandler();
         outputStream = socket.getOutputStream();
         inputStream = socket.getInputStream();
-        outputStream.flush();
     }
 
     public void run() {
@@ -81,6 +80,7 @@ public class Connection extends Thread {
 
         String filePath = Path.PAGES_PATH.getPath() + requestHandler.getUrl(request) + ".html";
         String response = responseHandler.getResponse(filePath, request);
+        outputStream.flush();
         outputStream.write(response.getBytes());
         logArea.append(Constants.SEPARATOR.getConstant() + response + "\n");
     }

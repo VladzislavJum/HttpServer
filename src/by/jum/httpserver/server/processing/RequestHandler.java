@@ -32,7 +32,7 @@ public class RequestHandler implements IRequestHandler {
         final String contentHeader = "Content-Length: ";
         int startIndex = request.indexOf(contentHeader) + contentHeader.length();
         int endIndex = request.substring(startIndex).indexOf("\n") + startIndex;
-        int contentLength = Integer.parseInt(request.substring(startIndex, endIndex));
+        int contentLength = Integer.parseInt(request.substring(startIndex, endIndex).trim());
         return contentLength;
     }
 
